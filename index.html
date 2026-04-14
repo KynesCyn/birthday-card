@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Card</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #fce4ec, #e3f2fd);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .screen {
+      position: absolute;
+      text-align: center;
+      font-size: 20px;
+      color: #444;
+      opacity: 0;
+      transition: all 0.8s ease;
+    }
+
+    .screen.show {
+      opacity: 1;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 300px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s ease;
+    }
+
+    .card.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    h1 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .from {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="screen show" id="s1">Klik yaa 👀</div>
+  <div class="screen" id="s2">Ada sesuatu buat kamu...</div>
+  <div class="screen" id="s3">Siap? 😄</div>
+
+  <div class="card" id="card">
+    <h1>Happy Birthday, Dinayaa! 🎉</h1>
+    <p>
+      Semoga panjang umur, sehat selalu, dan sukses ke depannya.<br>
+      Semoga kuliah farmasinya lancar yaa… jangan sampai bikin obat beracun 😆<br><br>
+      Semoga suka sama parfumnya yaa 😊
+    </p>
+    <div class="from">Dari Kevin</div>
+  </div>
+
+  <!-- Musik Happy Birthday -->
+  <audio id="music" src="https://www2.cs.uic.edu/~i101/SoundFiles/HappyBirthday.mid"></audio>
+
+  <script>
+    let step = 0;
+    const screens = [
+      document.getElementById('s1'),
+      document.getElementById('s2'),
+      document.getElementById('s3')
+    ];
+
+    document.body.addEventListener('click', () => {
+      if (step < screens.length) {
+        screens[step].classList.remove('show');
+        step++;
+        if (step < screens.length) {
+          screens[step].classList.add('show');
+        } else {
+          document.getElementById('card').classList.add('show');
+          document.getElementById('music').play();
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
