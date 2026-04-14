@@ -15,6 +15,7 @@
       font-family: 'Segoe UI', sans-serif;
       overflow: hidden;
       cursor: pointer;
+      position: relative;
     }
 
     .screen {
@@ -24,12 +25,14 @@
       color: #444;
       opacity: 0;
       transition: all 0.8s ease;
+      z-index: 10;
     }
 
     .screen.show {
       opacity: 1;
     }
 
+    /* KARTU SURAT - Posisinya dipastikan paling depan */
     .card {
       background: white;
       padding: 30px;
@@ -40,6 +43,8 @@
       opacity: 0;
       transform: translateY(30px);
       transition: all 1s ease;
+      z-index: 20; /* Lebih tinggi dari foto */
+      position: relative;
     }
 
     .card.show {
@@ -62,6 +67,60 @@
       margin-top: 20px;
       font-weight: bold;
     }
+
+    /* GAYA UNTUK FOTO MELAYANG */
+    .photo-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Biar fotonya ga ganggu kalau ga sengaja keklik */
+      z-index: 5; /* Di belakang kartu */
+    }
+
+    .photo {
+      position: absolute;
+      width: 140px; /* Ukuran default untuk laptop */
+      border: 6px solid white;
+      border-radius: 8px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      opacity: 0;
+      transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Animasi saat foto muncul (zoom in tipis) */
+    .photo-container.show .photo {
+      opacity: 1;
+    }
+
+    /* POSISI FOTO MENYEBAR & MIRING ESTETIK */
+    .photo-container.show .p1 { top: 10%; left: 8%; transform: rotate(-12deg) scale(1); }
+    .photo-container.show .p2 { top: 15%; right: 8%; transform: rotate(15deg) scale(1); }
+    .photo-container.show .p3 { bottom: 12%; left: 10%; transform: rotate(-8deg) scale(1); }
+    .photo-container.show .p4 { bottom: 10%; right: 10%; transform: rotate(10deg) scale(1); }
+    .photo-container.show .p5 { top: 5%; left: 50%; transform: translateX(-50%) rotate(5deg) scale(1); }
+
+    /* Ukuran awal sebelum muncul */
+    .p1 { top: 10%; left: 8%; transform: rotate(-12deg) scale(0.5); }
+    .p2 { top: 15%; right: 8%; transform: rotate(15deg) scale(0.5); }
+    .p3 { bottom: 12%; left: 10%; transform: rotate(-8deg) scale(0.5); }
+    .p4 { bottom: 10%; right: 10%; transform: rotate(10deg) scale(0.5); }
+    .p5 { top: 5%; left: 50%; transform: translateX(-50%) rotate(5deg) scale(0.5); }
+
+    /* RESPONSIVE UNTUK HP BIAR GAK NUTUPIN KARTU */
+    @media (max-width: 600px) {
+      .photo {
+        width: 85px; /* Foto mengecil otomatis kalau dibuka di HP */
+        border: 4px solid white;
+      }
+      /* Geser posisi foto di HP agar lebih minggir */
+      .photo-container.show .p1 { top: 5%; left: 2%; transform: rotate(-15deg) scale(1); }
+      .photo-container.show .p2 { top: 8%; right: 2%; transform: rotate(12deg) scale(1); }
+      .photo-container.show .p3 { bottom: 5%; left: 3%; transform: rotate(-10deg) scale(1); }
+      .photo-container.show .p4 { bottom: 8%; right: 3%; transform: rotate(10deg) scale(1); }
+      .photo-container.show .p5 { top: 2%; left: 50%; transform: translateX(-50%) rotate(4deg) scale(1); }
+    }
   </style>
 </head>
 <body>
@@ -70,17 +129,24 @@
   <div class="screen" id="s2">Ada sesuatu buat kamu...</div>
   <div class="screen" id="s3">Siap? 😄</div>
 
+  <div class="photo-container" id="photos">
+    <img src="1.jpeg" class="photo p1" alt="Foto 1">
+    <img src="2.jpeg" class="photo p2" alt="Foto 2">
+    <img src="3.jpeg" class="photo p3" alt="Foto 3">
+    <img src="4.jpeg" class="photo p4" alt="Foto 4">
+    <img src="5.jpeg" class="photo p5" alt="Foto 5">
+  </div>
+
   <div class="card" id="card">
     <h1>Happy Birthday, Dinayaa! 🎉</h1>
     <p>
-      Semoga panjang umur, sehat selalu, dan sukses ke depannya.<br>
+      Selamat ulang tahun ke 18! Semoga panjang umur, sehat selalu, dan sukses ke depannya.<br>
       Semoga kuliah farmasinya lancar yaa… jangan sampai bikin obat beracun 😆<br><br>
-      Semoga suka sama parfumnya yaa 😊
+      Semoga suka sama hadiahnyaa 😊
     </p>
     <div class="from">Dari Kevin</div>
   </div>
 
-  <!-- Musik Happy Birthday -->
   <audio id="music" src="happy.mp3" preload="auto"></audio>
 
   <script>
@@ -98,7 +164,9 @@
         if (step < screens.length) {
           screens[step].classList.add('show');
         } else {
+          // Munculkan kartu, foto, dan lagu secara bersamaan
           document.getElementById('card').classList.add('show');
+          document.getElementById('photos').classList.add('show'); // Trigger foto muncul
           document.getElementById('music').play();
         }
       }
